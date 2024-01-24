@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var temperatureType = ["Celsius", "Farenheit", "Kelvin"]
     
     @State private var temperatureInput = 0.0
+    @FocusState private var isTemperatureFocused: Bool
     
     var temperatureTotal: Double {
         var totalTemp = 0.0
@@ -61,8 +62,11 @@ struct ContentView: View {
                         }
                     }
                     TextField("Type temperature to convert", value: $temperatureInput, format: .number)
+                        .keyboardType(.numberPad)
+                        .focused($isTemperatureFocused)
+                        
                 }
-                Section("Temperature Output") {
+                                Section("Temperature Output") {
                     Picker("Temperature Output", selection: $defaultTemperatureOutput){
                         ForEach(temperatureType, id: \.self) {
                             Text("\($0)")
@@ -77,6 +81,13 @@ struct ContentView: View {
             }
             .navigationTitle("Temperature Converter")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if isTemperatureFocused {
+                    Button("Done") {
+                        isTemperatureFocused = false
+                    }
+                }
+            }
         }
         
     }
